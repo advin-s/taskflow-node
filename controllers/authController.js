@@ -30,6 +30,8 @@ export const signUp = async(req,res,next) =>{
 export const login = async(req,res,next) =>{
     try{
         const { email,password } = req.body
+        console.log(email, password);
+        
         // check if email and password exist
         if(!email || !password){
             return res.status(404).json({
@@ -40,9 +42,11 @@ export const login = async(req,res,next) =>{
 
         // check if password is correct
         const user = await User.findOne({email}).select('+password')
-
+        console.log(user);
+        
         const correct = await user.correctPassword(password,user.password)
-
+        console.log(correct);
+        
         if(!user || !correct){
             return res.status(404).json({
                 status:"failed",
