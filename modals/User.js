@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validator:[Validator.isEmail,'Please provide a valid email']
   },
+  passwordChangedAt:Date,
+  role:{type:String, enum:['admin,user'], default:'user'},
   password: { type: String, required: [true,'Please provide a password'], minlength:8, select:false },
   confirmPassword: { type: String, required: [true,'Please confirm your password'],  validate:{
     // this will only work on create and save
@@ -36,6 +38,14 @@ userSchema.pre('save', async function(next){
 
 userSchema.methods.correctPassword = function(candidatePassword,userPassword){
   return bcrypt.compare(candidatePassword,userPassword)
+}
+
+userSchema.methods.changedPasswordAfter = function(timeStamp){
+  console.log(timeStamp,this.passwordChangedAt);
+  
+  if(this.passwordChangedAt){
+
+  }
 }
 
 const User = mongoose.model('User',userSchema)
